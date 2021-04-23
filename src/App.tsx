@@ -16,16 +16,15 @@ function App() {
     listEstudiante:[]
   })
 
-  useEffect(()=>{
-    
-    (async function getEstudiantes(){
-      const api = new Api()
-      const response = (await api.getEstudiantes()).data
-      setState({estudiante:null,listEstudiante:response})
-     
-    })();
-    
+  useEffect(()=>{ 
+    getEstudiantes()
   },[]);
+
+  async function getEstudiantes(){
+    const api = new Api()
+    const response = (await api.getEstudiantes()).data
+    setState({estudiante:null,listEstudiante:response})  
+  }
 
   return (
     <div className="container p-4">
@@ -36,8 +35,10 @@ function App() {
           Agregar
         </button>
        <Tabla data={state.listEstudiante}/>
+
        <ModalEstudiante
         modalId="modalEstudiante"
+        reload={getEstudiantes}
        />
     </div>
   );

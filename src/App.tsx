@@ -34,7 +34,7 @@ function App() {
            className="btn btn-info mb-1 text-white">
           Agregar
         </button>
-       <Tabla data={state.listEstudiante}/>
+       <Tabla data={state.listEstudiante} reload={getEstudiantes}/>
 
        <ModalEstudiante
         modalId="modalEstudiante"

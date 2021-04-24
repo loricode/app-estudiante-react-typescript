@@ -13,6 +13,10 @@ class Api {
         return axios.post(this.url + 'estudiantes', estudiante);
     }
 
+    public deleteEstudiante(id:number){
+        return axios.delete(this.url + `estudiantes/${id}`)
+    }
+
 }
 
 export default Api;

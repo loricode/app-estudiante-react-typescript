@@ -1,19 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Api from '../../http';
 import { Estudiante } from '../../interfaces/estudiante';
 
 interface Props {
   modalId: string;
-  reload?:any
+  reload?: any
+  data: Estudiante | null,
+  action: null
 }
 
-const ModalEstudiante = ({ modalId, reload }: Props) => {
+const ModalEstudiante = ({ modalId, reload, data, action }: Props) => {
 
   const [estudiante, setEstudiante] = useState<Estudiante>({
+    id: 0,
     nombre: '',
     edad: '',
     telefono: '',
   })
+
+  useEffect(() => {
+    if (data) {
+      if (action === 'edit') {
+        setEstudiante({
+          id: data?.id,
+          nombre: data?.nombre,
+          edad: data?.edad,
+          telefono: data?.telefono
+        });
+      } else clearInputs()
+    }
+  }, [data, action])
 
   function handleChangeInput(name: string, e: React.ChangeEvent<HTMLInputElement>) {
     setEstudiante({
@@ -24,14 +40,21 @@ const ModalEstudiante = ({ modalId, reload }: Props) => {
 
   async function handleSubmitSave() {
     const api = new Api()
-    const response = (await api.addEstudiante(estudiante)).data
-    console.log(response)
+    let response: any;
+    if (action === 'edit') {
+      response = (await api.updateEstudiante(estudiante)).data
+      console.log(response)
+    } else {
+      response = (await api.addEstudiante(estudiante)).data
+      console.log(response)
+    }
     clearInputs()
     reload()
   }
 
   function clearInputs() {
     setEstudiante({
+      id: 0,
       nombre: '',
       edad: '',
       telefono: '',
@@ -71,7 +94,7 @@ const ModalEstudiante = ({ modalId, reload }: Props) => {
                 type="number"
                 name="edad"
                 onChange={(e) => handleChangeInput('edad', e)}
-                value={estudiante?.edad} 
+                value={estudiante?.edad}
               />
             </div>
             <div className="m-2">
@@ -95,8 +118,8 @@ const ModalEstudiante = ({ modalId, reload }: Props) => {
                 type="button"
                 onClick={handleSubmitSave}
                 className="btn btn-success">
-                Guardar
-                           </button>
+               {action === 'edit' ? "Editar":"Guardar"} 
+              </button>
             </div>
           </div>
         </div>

@@ -6,14 +6,16 @@ import {Estudiante} from './interfaces/estudiante';
 
 interface State {
   estudiante:Estudiante | null
-  listEstudiante:Estudiante[]
+  listEstudiante:Estudiante[],
+  action:null
 }
 
 function App() {
   
   const [state, setState] = useState<State>({
     estudiante:null,
-    listEstudiante:[]
+    listEstudiante:[],
+    action:null
   })
 
   useEffect(()=>{ 
@@ -23,7 +25,7 @@ function App() {
   async function getEstudiantes(){
     const api = new Api()
     const response = (await api.getEstudiantes()).data
-    setState({estudiante:null,listEstudiante:response})  
+    setState({estudiante:null,listEstudiante:response, action:null})  
   }
 
   return (
@@ -31,14 +33,28 @@ function App() {
        <button 
            data-bs-toggle="modal"
            data-bs-target="#modalEstudiante"
-           className="btn btn-info mb-1 text-white">
+           className="btn btn-info mb-1 text-white"
+           onClick={()=>setState({
+               estudiante:state.estudiante,
+               listEstudiante:state.listEstudiante,
+               action:null
+              })
+             }
+           >
           Agregar
         </button>
-       <Tabla data={state.listEstudiante} reload={getEstudiantes}/>
+       <Tabla
+        data={state.listEstudiante}
+        reload={getEstudiantes}
+        setState={setState}
+        state={state}
+        />
 
        <ModalEstudiante
         modalId="modalEstudiante"
         reload={getEstudiantes}
+        data={state.estudiante as Estudiante}
+        action={state.action}
        />
     </div>
   );

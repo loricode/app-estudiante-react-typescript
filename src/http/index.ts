@@ -17,6 +17,14 @@ class Api {
         return axios.delete(this.url + `estudiantes/${id}`)
     }
 
+    public getEstudiante(id:number){
+        return axios.get(this.url + `estudiantes/${id}`)
+    }
+
+    public updateEstudiante(estudiante:Estudiante){
+        return axios.put(this.url + `estudiantes`, estudiante)
+    }
+
 }
 
 export default Api;
